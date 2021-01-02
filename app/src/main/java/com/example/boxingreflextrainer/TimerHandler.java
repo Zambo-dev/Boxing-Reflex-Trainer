@@ -1,7 +1,11 @@
 package com.example.boxingreflextrainer;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.CountDownTimer;
 import android.widget.TextView;
+import androidx.preference.PreferenceManager;
+
 
 // This class manage the timer functions
 public class TimerHandler {
@@ -16,11 +20,13 @@ public class TimerHandler {
     // Timer activty check
     boolean isActive = false;
     final int timeConversionValue = 60000;
+    SharedPreferences sharedPreferences;
+
 
     // Constructor
-    TimerHandler(TextView template, float mils) {
+    TimerHandler(TextView template, long minutes, long seconds) {
         // Set total time
-        totalTime = convertTime(mils);
+        totalTime = convertTime(minutes, seconds);
         milsToFinish = totalTime;
         // Set timer TextView
         timer = template;
@@ -30,6 +36,7 @@ public class TimerHandler {
         clock = createTimer();
     }
 
+
     // Update timer View
     public void updateTimerView(long time) {
         long minutes = time / timeConversionValue;
@@ -38,17 +45,21 @@ public class TimerHandler {
         timer.setText(String.format("%d:%d", minutes, seconds));
     }
 
+
     // Set max time
-    public void setTotalTime(float time) {
-        this.totalTime = convertTime(time);
+    public void setTotalTime(long minutes, long seconds) {
+        this.totalTime = convertTime(minutes, seconds);
         stopTimer();
     }
 
+
     // Convert time into milliseconds
-    public long convertTime(float time) {
-        time *= 60000;
-        return (long)time;
+    public long convertTime(long minutes, long seconds) {
+        long time = minutes * 60000;
+        time += seconds * 1000;
+        return time;
     }
+
 
     // Function that create the timer
     protected CountDownTimer createTimer() {
@@ -63,11 +74,27 @@ public class TimerHandler {
 
             // When timer reach to the end print on TextView
             public void onFinish() {
-                timer.setText("Done!");
+                stopTimer();
             }
         };
 
     }
+
+    // Get preferences form xml file
+    public void getPreferences(String preferenceKey, Context context) {
+        // Get shared preferences
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+        // Get timerTimer key's value from preferences
+        String temp = sharedPreferences.getString(preferenceKey, "0:0");
+        // Split minutes and seconds
+        String[] splitString = temp.split(":");
+        // Convert minutes and seconds into long and set the timer
+        setTotalTime(Long.parseLong(splitString[0]), Long.parseLong(splitString[1]));
+        // Update timer View
+        updateTimerView(milsToFinish);
+
+    }
+
 
     // Function that start the timer when it's not active
     protected void startTimer() {
@@ -78,6 +105,7 @@ public class TimerHandler {
             isActive = true;
         }
     }
+
 
     // Function that pause the timer
     protected void pauseTimer() {
@@ -90,6 +118,7 @@ public class TimerHandler {
             isActive = false;
         }
     }
+
 
     // Function that stop the timer
     protected void stopTimer() {

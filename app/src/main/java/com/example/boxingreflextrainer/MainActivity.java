@@ -1,5 +1,6 @@
 package com.example.boxingreflextrainer;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -11,13 +12,15 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.preference.PreferenceManager;
 
+import java.util.Timer;
+
+
 public class MainActivity extends AppCompatActivity {
     // Global class variables
     private Button startButton;
     private Button pauseButton;
     private Button stopButton;
     private TimerHandler timerHandler;
-    SharedPreferences sharedPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,14 +32,10 @@ public class MainActivity extends AppCompatActivity {
         pauseButton = findViewById(R.id.PauseButton);
         stopButton = findViewById(R.id.StopButton);
 
-        // Get shared preferences
-        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        // Get timerTimer key's value from preferences
-        String temp = sharedPreferences.getString("timerTime", "0");
-        // Convert string to long
-        float time = Float.parseFloat(temp);
-        // Pass timer view and time to TimerHandler class
-        timerHandler = new TimerHandler(this.<TextView>findViewById(R.id.Timer), time);
+        // Pass timer view and time to TimerHandler class with constructor
+        timerHandler = new TimerHandler(this.<TextView>findViewById(R.id.Timer), 0, 0);
+        // Get shared preference time
+        timerHandler.getPreferences("trainingTime", this);
 
         // Set click listener on start button
         startButton.setOnClickListener(new View.OnClickListener() {
@@ -83,19 +82,15 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+
     @Override
     public void onResume() {
         super.onResume();
 
-        // Get shared preferences
-        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        // Get timerTimer key's value from preferences
-        String temp = sharedPreferences.getString("timerTime", "0");
-        // Convert string to long
-        float time = Float.parseFloat(temp);
-        // Pass timer view and time to TimerHandler class
-        timerHandler.setTotalTime(time);
+        // Get shared preference time
+        timerHandler.getPreferences("trainingTime", this);
     }
+
 
     @Override
     // Create settings menu in the action bar
