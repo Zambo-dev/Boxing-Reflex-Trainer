@@ -88,14 +88,16 @@ public class TimerHandler {
 
             // When timer reach to the end print on TextView
             public void onFinish() {
-                if(!isRestTimer)
-                    roundIterator++;
 
-                if(roundIterator <= roundNumber) {
+                if(roundIterator < roundNumber - 1) {
                     isRestTimer = !isRestTimer;
                     getPreferences();
                     isActive = false;
                     startTimer();
+
+                    if(!isRestTimer)
+                        roundIterator++;
+
                 } else {
                     stopTimer();
                     isActive = false;
@@ -177,6 +179,7 @@ public class TimerHandler {
         milsToFinish = totalTime;
         // Create a new timer with milliseconds remaining
         clock = createTimer();
+        roundIterator = 0;
         // Reset TextView's text
         updateView(milsToFinish);
     }
