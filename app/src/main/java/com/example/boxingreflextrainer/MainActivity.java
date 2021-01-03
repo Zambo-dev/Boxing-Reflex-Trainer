@@ -28,9 +28,9 @@ public class MainActivity extends AppCompatActivity {
         stopButton = findViewById(R.id.StopButton);
 
         // Pass timer view and time to TimerHandler class with constructor
-        timerHandler = new TimerHandler(this.<TextView>findViewById(R.id.Timer), 0, 0);
+        timerHandler = new TimerHandler(this.<TextView>findViewById(R.id.Timer), this.<Button>findViewById(R.id.StartButton), this.<Button>findViewById(R.id.PauseButton), this.<Button>findViewById(R.id.StopButton), 0, 0, this);
         // Get shared preference time
-        timerHandler.getPreferences("trainingTime", this);
+        timerHandler.getPreferences();
 
         // Set click listener on start button
         startButton.setOnClickListener(new View.OnClickListener() {
@@ -66,12 +66,9 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 // Call StopTimer function from TimerHandler class
                 timerHandler.stopTimer();
-                //Change start button text from "Paused" to "Start"
-                startButton.setText("Start");
-                // Hide pause and stop button and show start button
-                startButton.setVisibility(View.VISIBLE);
-                pauseButton.setVisibility(View.GONE);
-                stopButton.setVisibility(View.GONE);
+                timerHandler.isRestTimer = false;
+                timerHandler.roundIterator = 0;
+                timerHandler.getPreferences();
             }
         });
 
@@ -83,7 +80,7 @@ public class MainActivity extends AppCompatActivity {
         super.onResume();
 
         // Get shared preference time
-        timerHandler.getPreferences("trainingTime", this);
+        timerHandler.getPreferences();
     }
 
 

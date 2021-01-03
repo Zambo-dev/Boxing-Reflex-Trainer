@@ -18,4 +18,12 @@
         </EditTextPreference>
 
 
+        <EditTextPreference
+            android:title="Rounds number"
+            android:key="roundsNumber"
+            android:defaultValue="2"
+            >
+        </EditTextPreference>
+
+
 </PreferenceScreen>

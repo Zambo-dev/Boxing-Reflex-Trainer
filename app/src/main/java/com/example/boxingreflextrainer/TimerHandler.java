@@ -3,6 +3,8 @@ package com.example.boxingreflextrainer;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.CountDownTimer;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import androidx.preference.PreferenceManager;
 
@@ -19,12 +21,21 @@ public class TimerHandler {
     CountDownTimer clock;
     // Timer activty check
     boolean isActive = false;
+    boolean isRestTimer = false;
     final int timeConversionValue = 60000;
     SharedPreferences sharedPreferences;
+    Context context;
+    int roundIterator = 0;
+    int roundNumber;
+    Button startButton, pauseButton, stopButton;
 
 
     // Constructor
-    TimerHandler(TextView template, long minutes, long seconds) {
+    TimerHandler(TextView template, Button start, Button pause, Button stop, long minutes, long seconds, Context context) {
+        this.context = context;
+        startButton = start;
+        pauseButton = pause;
+        stopButton = stop;
         // Set total time
         totalTime = convertTime(minutes, seconds);
         milsToFinish = totalTime;
@@ -34,6 +45,7 @@ public class TimerHandler {
         updateTimerView(milsToFinish);
         // Create timer
         clock = createTimer();
+
     }
 
 
@@ -74,22 +86,47 @@ public class TimerHandler {
 
             // When timer reach to the end print on TextView
             public void onFinish() {
-                stopTimer();
+                if(!isRestTimer)
+                    roundIterator++;
+
+                if(roundIterator <= roundNumber) {
+                    isRestTimer = !isRestTimer;
+                    getPreferences();
+                    startTimer();
+                } else {
+                    stopTimer();
+                }
             }
         };
 
     }
 
+
     // Get preferences form xml file
-    public void getPreferences(String preferenceKey, Context context) {
+    public void getPreferences() {
+        String temp;
         // Get shared preferences
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
-        // Get timerTimer key's value from preferences
-        String temp = sharedPreferences.getString(preferenceKey, "0:0");
-        // Split minutes and seconds
-        String[] splitString = temp.split(":");
-        // Convert minutes and seconds into long and set the timer
-        setTotalTime(Long.parseLong(splitString[0]), Long.parseLong(splitString[1]));
+
+        if(!isRestTimer) {
+            // Get timerTimer key's value from preferences
+            temp = sharedPreferences.getString("trainingTime", "0:0");
+            // Split minutes and seconds
+            String[] splitString = temp.split(":");
+            // Convert minutes and seconds into long and set the timer
+            setTotalTime(Long.parseLong(splitString[0]), Long.parseLong(splitString[1]));
+        }
+        else {
+            // Get timerTimer key's value from preferences
+            temp = sharedPreferences.getString("restTime", "0:0");
+            // Split minutes and seconds
+            String[] splitString = temp.split(":");
+            // Convert minutes and seconds into long and set the timer
+            setTotalTime(Long.parseLong(splitString[0]), Long.parseLong(splitString[1]));
+        }
+
+        roundNumber = sharedPreferences.getInt("roundNumber", 1);
+
         // Update timer View
         updateTimerView(milsToFinish);
 
@@ -122,6 +159,12 @@ public class TimerHandler {
 
     // Function that stop the timer
     protected void stopTimer() {
+        //Change start button text from "Paused" to "Start"
+        startButton.setText("Start");
+        // Hide pause and stop button and show start button
+        startButton.setVisibility(View.VISIBLE);
+        pauseButton.setVisibility(View.GONE);
+        stopButton.setVisibility(View.GONE);
         // Delete the actual timer
         clock.cancel();
         // Reset the milliseconds remaining
