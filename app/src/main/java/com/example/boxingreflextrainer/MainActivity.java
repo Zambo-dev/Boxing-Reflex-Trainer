@@ -64,6 +64,8 @@ public class MainActivity extends AppCompatActivity {
         stopButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // Change timer status
+                timerHandler.isActive = false;
                 // Call StopTimer function from TimerHandler class
                 timerHandler.stopTimer();
                 timerHandler.isRestTimer = false;

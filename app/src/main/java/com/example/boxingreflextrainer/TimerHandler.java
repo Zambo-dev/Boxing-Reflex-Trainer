@@ -92,9 +92,11 @@ public class TimerHandler {
                 if(roundIterator <= roundNumber) {
                     isRestTimer = !isRestTimer;
                     getPreferences();
+                    isActive = false;
                     startTimer();
                 } else {
                     stopTimer();
+                    isActive = false;
                 }
             }
         };
@@ -161,18 +163,18 @@ public class TimerHandler {
     protected void stopTimer() {
         //Change start button text from "Paused" to "Start"
         startButton.setText("Start");
-        // Hide pause and stop button and show start button
-        startButton.setVisibility(View.VISIBLE);
-        pauseButton.setVisibility(View.GONE);
-        stopButton.setVisibility(View.GONE);
+        if(!isActive) {
+            // Hide pause and stop button and show start button
+            startButton.setVisibility(View.VISIBLE);
+            pauseButton.setVisibility(View.GONE);
+            stopButton.setVisibility(View.GONE);
+        }
         // Delete the actual timer
         clock.cancel();
         // Reset the milliseconds remaining
         milsToFinish = totalTime;
         // Create a new timer with milliseconds remaining
         clock = createTimer();
-        // Change timer status
-        isActive = false;
         // Reset TextView's text
         updateTimerView(milsToFinish);
     }
