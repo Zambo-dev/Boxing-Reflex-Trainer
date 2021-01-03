@@ -28,7 +28,7 @@ public class MainActivity extends AppCompatActivity {
         stopButton = findViewById(R.id.StopButton);
 
         // Pass timer view and time to TimerHandler class with constructor
-        timerHandler = new TimerHandler(this.<TextView>findViewById(R.id.Timer), this.<Button>findViewById(R.id.StartButton), this.<Button>findViewById(R.id.PauseButton), this.<Button>findViewById(R.id.StopButton), 0, 0, this);
+        timerHandler = new TimerHandler(this.<TextView>findViewById(R.id.Timer), this.<TextView>findViewById(R.id.RoundView), this.<Button>findViewById(R.id.StartButton), this.<Button>findViewById(R.id.PauseButton), this.<Button>findViewById(R.id.StopButton), 0, 0, this);
         // Get shared preference time
         timerHandler.getPreferences();
 

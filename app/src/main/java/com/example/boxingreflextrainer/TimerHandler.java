@@ -12,7 +12,8 @@ import androidx.preference.PreferenceManager;
 // This class manage the timer functions
 public class TimerHandler {
     // Create TextView object
-    public TextView timer;
+    public TextView timer, roundView;
+    public Button startButton, pauseButton, stopButton;
     // Timer's remaining time
     long milsToFinish;
     // Total time got from settings file
@@ -26,23 +27,23 @@ public class TimerHandler {
     SharedPreferences sharedPreferences;
     Context context;
     int roundIterator = 0;
-    int roundNumber;
-    Button startButton, pauseButton, stopButton;
+    int roundNumber = 0;
 
 
     // Constructor
-    TimerHandler(TextView template, Button start, Button pause, Button stop, long minutes, long seconds, Context context) {
+    TimerHandler(TextView template, TextView round, Button start, Button pause, Button stop, long minutes, long seconds, Context context) {
         this.context = context;
         startButton = start;
         pauseButton = pause;
         stopButton = stop;
+        roundView = round;
         // Set total time
         totalTime = convertTime(minutes, seconds);
         milsToFinish = totalTime;
         // Set timer TextView
         timer = template;
         // Set timer text
-        updateTimerView(milsToFinish);
+        updateView(milsToFinish);
         // Create timer
         clock = createTimer();
 
@@ -50,10 +51,11 @@ public class TimerHandler {
 
 
     // Update timer View
-    public void updateTimerView(long time) {
+    public void updateView(long time) {
         long minutes = time / timeConversionValue;
         long seconds = (time % timeConversionValue) / 1000;
 
+        roundView.setText(String.format("Round: %d/%d", roundIterator + 1, roundNumber));
         timer.setText(String.format("%d:%d", minutes, seconds));
     }
 
@@ -81,7 +83,7 @@ public class TimerHandler {
             // Every tick update milliseconds remaining and TextView's text
             public void onTick(long millisUntilFinished) {
                 milsToFinish = millisUntilFinished;
-                updateTimerView(milsToFinish);
+                updateView(milsToFinish);
             }
 
             // When timer reach to the end print on TextView
@@ -127,10 +129,10 @@ public class TimerHandler {
             setTotalTime(Long.parseLong(splitString[0]), Long.parseLong(splitString[1]));
         }
 
-        roundNumber = sharedPreferences.getInt("roundNumber", 1);
+        roundNumber = Integer.parseInt(sharedPreferences.getString("roundsNumber", "-1"));
 
         // Update timer View
-        updateTimerView(milsToFinish);
+        updateView(milsToFinish);
 
     }
 
@@ -176,7 +178,7 @@ public class TimerHandler {
         // Create a new timer with milliseconds remaining
         clock = createTimer();
         // Reset TextView's text
-        updateTimerView(milsToFinish);
+        updateView(milsToFinish);
     }
 
 }
