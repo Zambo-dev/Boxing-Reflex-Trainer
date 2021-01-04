@@ -68,7 +68,8 @@ public class MainActivity extends AppCompatActivity {
                 timerHandler.isActive = false;
                 // Call StopTimer function from TimerHandler class
                 timerHandler.stopTimer();
-                timerHandler.isRestTimer = false;
+                timerHandler.isRestTime = false;
+                timerHandler.isPreparationTime = true;
                 timerHandler.roundIterator = 0;
                 timerHandler.getPreferences();
             }

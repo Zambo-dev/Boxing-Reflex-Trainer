@@ -22,7 +22,8 @@ public class TimerHandler {
     CountDownTimer clock;
     // Timer activty check
     boolean isActive = false;
-    boolean isRestTimer = false;
+    boolean isRestTime = false;
+    boolean isPreparationTime = true;
     final int timeConversionValue = 60000;
     SharedPreferences sharedPreferences;
     Context context;
@@ -89,18 +90,35 @@ public class TimerHandler {
             // When timer reach to the end print on TextView
             public void onFinish() {
 
-                if(roundIterator < roundNumber - 1) {
-                    isRestTimer = !isRestTimer;
-                    getPreferences();
-                    isActive = false;
-                    startTimer();
+                if(roundIterator < roundNumber) {
 
-                    if(!isRestTimer)
+                    if(!isRestTime && !isPreparationTime)
                         roundIterator++;
 
+                    if(roundIterator > 0)
+                        isRestTime = !isRestTime;
+                    else {
+                        isPreparationTime = !isPreparationTime;
+                    }
+
+                    if(roundIterator == roundNumber -1 && isRestTime) {
+                        isRestTime = false;
+                        isActive = false;
+                        isPreparationTime = true;
+                        getPreferences();
+                        stopTimer();
+                    } else {
+                        getPreferences();
+                        isActive = false;
+                        startTimer();
+                    }
+
                 } else {
-                    stopTimer();
+                    isRestTime = false;
                     isActive = false;
+                    isPreparationTime = true;
+                    getPreferences();
+                    stopTimer();
                 }
             }
         };
@@ -114,7 +132,7 @@ public class TimerHandler {
         // Get shared preferences
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
 
-        if(!isRestTimer) {
+        if(!isRestTime && !isPreparationTime) {
             // Get timerTimer key's value from preferences
             temp = sharedPreferences.getString("trainingTime", "0:0");
             // Split minutes and seconds
@@ -122,9 +140,16 @@ public class TimerHandler {
             // Convert minutes and seconds into long and set the timer
             setTotalTime(Long.parseLong(splitString[0]), Long.parseLong(splitString[1]));
         }
-        else {
+        else if(isRestTime && !isPreparationTime) {
             // Get timerTimer key's value from preferences
             temp = sharedPreferences.getString("restTime", "0:0");
+            // Split minutes and seconds
+            String[] splitString = temp.split(":");
+            // Convert minutes and seconds into long and set the timer
+            setTotalTime(Long.parseLong(splitString[0]), Long.parseLong(splitString[1]));
+        } else {
+            // Get timerTimer key's value from preferences
+            temp = sharedPreferences.getString("preparationTime", "0:0");
             // Split minutes and seconds
             String[] splitString = temp.split(":");
             // Convert minutes and seconds into long and set the timer
@@ -179,7 +204,6 @@ public class TimerHandler {
         milsToFinish = totalTime;
         // Create a new timer with milliseconds remaining
         clock = createTimer();
-        roundIterator = 0;
         // Reset TextView's text
         updateView(milsToFinish);
     }

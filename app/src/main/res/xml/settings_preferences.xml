@@ -17,6 +17,12 @@
             >
         </EditTextPreference>
 
+        <EditTextPreference
+            android:title="Preparation time"
+            android:key="preparationTime"
+            android:defaultValue="0:10"
+            >
+        </EditTextPreference>
 
         <EditTextPreference
             android:title="Rounds number"
