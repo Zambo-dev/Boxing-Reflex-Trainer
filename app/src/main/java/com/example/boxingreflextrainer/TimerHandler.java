@@ -93,7 +93,7 @@ public class TimerHandler {
                         isRestTime = false;
                         isActive = false;
                         isPreparationTime = true;
-                        roundIterator--;
+                        roundIterator = 0;
                         getPreferences();
                         stopTimer();
 
