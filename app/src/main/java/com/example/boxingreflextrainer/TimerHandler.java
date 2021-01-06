@@ -3,23 +3,19 @@ package com.example.boxingreflextrainer;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.CountDownTimer;
-import android.view.View;
-import android.widget.Button;
-import android.widget.TextView;
 import androidx.preference.PreferenceManager;
 
 
 // This class manage the timer functions
 public class TimerHandler {
-    // Create TextView object
-    public TextView timer, roundView;
-    public Button startButton, pauseButton, stopButton;
+    long minutes, seconds;
     // Timer's remaining time
     long milsToFinish;
     // Total time got from settings file
     long totalTime;
     // Create timer object
     CountDownTimer clock;
+    TimerCallbacks dataCallback;
     // Timer activty check
     boolean isActive = false;
     boolean isRestTime = false;
@@ -30,21 +26,15 @@ public class TimerHandler {
     int roundIterator = 0;
     int roundNumber = 0;
 
-
     // Constructor
-    TimerHandler(TextView template, TextView round, Button start, Button pause, Button stop, long minutes, long seconds, Context context) {
+    TimerHandler(long minutes, long seconds, Context context) {
+        dataCallback = (TimerCallbacks) context;
         this.context = context;
-        startButton = start;
-        pauseButton = pause;
-        stopButton = stop;
-        roundView = round;
         // Set total time
         totalTime = convertTime(minutes, seconds);
         milsToFinish = totalTime;
-        // Set timer TextView
-        timer = template;
         // Set timer text
-        updateView(milsToFinish);
+        updateTime(milsToFinish);
         // Create timer
         clock = createTimer();
 
@@ -52,12 +42,9 @@ public class TimerHandler {
 
 
     // Update timer View
-    public void updateView(long time) {
-        long minutes = time / timeConversionValue;
-        long seconds = (time % timeConversionValue) / 1000;
-
-        roundView.setText(String.format("Round: %d/%d", roundIterator + 1, roundNumber));
-        timer.setText(String.format("%d:%d", minutes, seconds));
+    public void updateTime(long time) {
+        minutes = time / timeConversionValue;
+        seconds = (time % timeConversionValue) / 1000;
     }
 
 
@@ -84,7 +71,8 @@ public class TimerHandler {
             // Every tick update milliseconds remaining and TextView's text
             public void onTick(long millisUntilFinished) {
                 milsToFinish = millisUntilFinished;
-                updateView(milsToFinish);
+                updateTime(milsToFinish);
+                dataCallback.dataView(minutes, seconds, roundIterator, roundNumber);
             }
 
             // When timer reach to the end print on TextView
@@ -159,7 +147,8 @@ public class TimerHandler {
         roundNumber = Integer.parseInt(sharedPreferences.getString("roundsNumber", "-1"));
 
         // Update timer View
-        updateView(milsToFinish);
+        updateTime(milsToFinish);
+        dataCallback.dataView(minutes, seconds, roundIterator, roundNumber);
 
     }
 
@@ -190,22 +179,17 @@ public class TimerHandler {
 
     // Function that stop the timer
     protected void stopTimer() {
-        //Change start button text from "Paused" to "Start"
-        startButton.setText("Start");
-        if(!isActive) {
-            // Hide pause and stop button and show start button
-            startButton.setVisibility(View.VISIBLE);
-            pauseButton.setVisibility(View.GONE);
-            stopButton.setVisibility(View.GONE);
-        }
         // Delete the actual timer
         clock.cancel();
+        if(!isActive)
+            dataCallback.resetButtons();
         // Reset the milliseconds remaining
         milsToFinish = totalTime;
         // Create a new timer with milliseconds remaining
         clock = createTimer();
         // Reset TextView's text
-        updateView(milsToFinish);
+        updateTime(milsToFinish);
+        dataCallback.dataView(minutes, seconds, roundIterator, roundNumber);
     }
 
 }

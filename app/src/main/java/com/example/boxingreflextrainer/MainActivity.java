@@ -9,13 +9,14 @@ import android.widget.Button;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
-
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements TimerCallbacks {
     // Global class variables
     private Button startButton;
     private Button pauseButton;
     private Button stopButton;
+    TextView timerView, roundView;
     private TimerHandler timerHandler;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,9 +27,11 @@ public class MainActivity extends AppCompatActivity {
         startButton = findViewById(R.id.StartButton);
         pauseButton = findViewById(R.id.PauseButton);
         stopButton = findViewById(R.id.StopButton);
+        timerView = findViewById(R.id.Timer);
+        roundView = findViewById(R.id.RoundView);
 
         // Pass timer view and time to TimerHandler class with constructor
-        timerHandler = new TimerHandler(this.<TextView>findViewById(R.id.Timer), this.<TextView>findViewById(R.id.RoundView), this.<Button>findViewById(R.id.StartButton), this.<Button>findViewById(R.id.PauseButton), this.<Button>findViewById(R.id.StopButton), 0, 0, this);
+        timerHandler = new TimerHandler(0, 0, this);
         // Get shared preference time
         timerHandler.getPreferences();
 
@@ -107,5 +110,21 @@ public class MainActivity extends AppCompatActivity {
 
         return true;
     }
+
+
+    @Override
+    public void dataView(long min, long sec, int iterator , int round) {
+        timerView.setText(String.format("%d:%d", min, sec));
+        roundView.setText(String.format("Round: %d/%d", iterator, round));
+    }
+
+    @Override
+    public void resetButtons() {
+        startButton.setText("Start");
+        startButton.setVisibility(View.VISIBLE);
+        pauseButton.setVisibility(View.GONE);
+        stopButton.setVisibility(View.GONE);
+    }
+
 
 }
