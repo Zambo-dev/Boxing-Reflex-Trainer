@@ -115,7 +115,7 @@ public class MainActivity extends AppCompatActivity implements TimerCallbacks {
     @Override
     public void dataView(long min, long sec, int iterator , int round) {
         timerView.setText(String.format("%d:%d", min, sec));
-        roundView.setText(String.format("Round: %d/%d", iterator, round));
+        roundView.setText(String.format("Round: %d/%d", iterator + 1, round));
     }
 
     @Override

@@ -89,12 +89,14 @@ public class TimerHandler {
                         isPreparationTime = !isPreparationTime;
                     }
 
-                    if(roundIterator == roundNumber -1 && isRestTime) {
+                    if(roundIterator == roundNumber && isRestTime) {
                         isRestTime = false;
                         isActive = false;
                         isPreparationTime = true;
+                        roundIterator--;
                         getPreferences();
                         stopTimer();
+
                     } else {
                         getPreferences();
                         isActive = false;
@@ -105,6 +107,7 @@ public class TimerHandler {
                     isRestTime = false;
                     isActive = false;
                     isPreparationTime = true;
+                    roundIterator = 0;
                     getPreferences();
                     stopTimer();
                 }
