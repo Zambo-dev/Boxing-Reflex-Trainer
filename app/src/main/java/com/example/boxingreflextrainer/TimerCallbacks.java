@@ -6,4 +6,5 @@ public interface TimerCallbacks {
     void dataView(long min, long sec, int iterator, int round);
     // Reset MainActivity's Views
     void resetButtons();
+    void changeBackgroundColor(int color);
 }

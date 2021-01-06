@@ -1,6 +1,7 @@
 package com.example.boxingreflextrainer;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -16,6 +17,7 @@ public class MainActivity extends AppCompatActivity implements TimerCallbacks {
     private Button stopButton;
     private TextView timerView, roundView;
     private TimerHandler timerHandler;
+    private View main;
 
 
     @Override
@@ -29,6 +31,7 @@ public class MainActivity extends AppCompatActivity implements TimerCallbacks {
         stopButton = findViewById(R.id.StopButton);
         timerView = findViewById(R.id.Timer);
         roundView = findViewById(R.id.RoundView);
+        main = findViewById(R.id.Main);
 
         // Initialize timerHandler with constructor
         timerHandler = new TimerHandler(0, 0, this);
@@ -60,6 +63,7 @@ public class MainActivity extends AppCompatActivity implements TimerCallbacks {
                 startButton.setVisibility(View.VISIBLE);
                 pauseButton.setVisibility(View.GONE);
                 stopButton.setVisibility(View.GONE);
+                changeBackgroundColor(Color.WHITE);
             }
         });
 
@@ -74,6 +78,7 @@ public class MainActivity extends AppCompatActivity implements TimerCallbacks {
                 timerHandler.roundIterator = 0;
                 // Call stopTimer
                 timerHandler.stopTimer();
+                changeBackgroundColor(Color.WHITE);
             }
         });
 
@@ -124,6 +129,10 @@ public class MainActivity extends AppCompatActivity implements TimerCallbacks {
         startButton.setVisibility(View.VISIBLE);
         pauseButton.setVisibility(View.GONE);
         stopButton.setVisibility(View.GONE);
+    }
+
+    public void changeBackgroundColor(int color) {
+        main.setBackgroundColor(color);
     }
 
 

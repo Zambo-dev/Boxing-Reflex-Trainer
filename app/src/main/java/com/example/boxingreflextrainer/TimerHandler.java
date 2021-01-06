@@ -2,6 +2,7 @@ package com.example.boxingreflextrainer;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.CountDownTimer;
 import androidx.preference.PreferenceManager;
 
@@ -117,6 +118,7 @@ public class TimerHandler {
                         roundIterator = 0;
                         getPreferences();
                         stopTimer();
+                        dataCallback.changeBackgroundColor(Color.WHITE);
 
                     // Start the timer with the new data
                     } else {
@@ -134,6 +136,7 @@ public class TimerHandler {
                     roundIterator = 0;
                     getPreferences();
                     stopTimer();
+                    dataCallback.changeBackgroundColor(Color.WHITE);
                 }
             }
         };
@@ -186,6 +189,12 @@ public class TimerHandler {
             clock.start();
             // Change timer status
             isActive = true;
+            if(isPreparationTime)
+                dataCallback.changeBackgroundColor(Color.YELLOW);
+            else if(isRestTime)
+                dataCallback.changeBackgroundColor(Color.RED);
+            else
+                dataCallback.changeBackgroundColor(Color.GREEN);
         }
     }
 
