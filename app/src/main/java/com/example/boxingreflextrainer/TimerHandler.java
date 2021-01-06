@@ -8,30 +8,43 @@ import androidx.preference.PreferenceManager;
 
 // This class manage the timer functions
 public class TimerHandler {
-    long minutes, seconds;
-    // Timer's remaining time
-    long milsToFinish;
-    // Total time got from settings file
-    long totalTime;
     // Create timer object
     CountDownTimer clock;
+    // TimerCallback object
     TimerCallbacks dataCallback;
-    // Timer activty check
-    boolean isActive = false;
-    boolean isRestTime = false;
-    boolean isPreparationTime = true;
-    final int timeConversionValue = 60000;
+    // Shared preferences object
     SharedPreferences sharedPreferences;
+    // MainActivity context
     Context context;
+
+    // Time variables
+    long minutes, seconds;
+    // Remaining time
+    long milsToFinish;
+    // Total time
+    long totalTime;
+    // Convert timer to or from milliseconds
+    final int timeConversionValue = 60000;
+    // Rounds iterator
     int roundIterator = 0;
+    // Total rounds number
     int roundNumber = 0;
+    // Timer is running
+    boolean isActive = false;
+    // Is rest time: bewteen two rounds
+    boolean isRestTime = false;
+    // Is preparation time: before start
+    boolean isPreparationTime = true;
 
     // Constructor
     TimerHandler(long minutes, long seconds, Context context) {
+        // Initialize Instance object
         dataCallback = (TimerCallbacks) context;
+        // Initialize context
         this.context = context;
         // Set total time
         totalTime = convertTime(minutes, seconds);
+        // Set milliseconds to finish
         milsToFinish = totalTime;
         // Set timer text
         updateTime(milsToFinish);
@@ -42,15 +55,19 @@ public class TimerHandler {
 
 
     // Update timer View
-    public void updateTime(long time) {
-        minutes = time / timeConversionValue;
-        seconds = (time % timeConversionValue) / 1000;
+    public void updateTime(long milliseconds) {
+        // Calculate minutes and seconds from milliseconds
+        minutes = milliseconds / timeConversionValue;
+        seconds = (milliseconds % timeConversionValue) / 1000;
+        // Update view
+        dataCallback.dataView(minutes, seconds, roundIterator, roundNumber);
     }
 
 
     // Set max time
     public void setTotalTime(long minutes, long seconds) {
         this.totalTime = convertTime(minutes, seconds);
+        // Refresh the timer
         stopTimer();
     }
 
@@ -72,24 +89,28 @@ public class TimerHandler {
             public void onTick(long millisUntilFinished) {
                 milsToFinish = millisUntilFinished;
                 updateTime(milsToFinish);
-                dataCallback.dataView(minutes, seconds, roundIterator, roundNumber);
             }
 
             // When timer reach to the end print on TextView
             public void onFinish() {
-
+                // Ceck if iterator is in round's range
                 if(roundIterator < roundNumber) {
 
+                    // If is workout time increase the round iterator
                     if(!isRestTime && !isPreparationTime)
                         roundIterator++;
 
+                    // If the roundIterator is higher than 0 update rest time
                     if(roundIterator > 0)
                         isRestTime = !isRestTime;
+                    // If is the first round update preparation time
                     else {
                         isPreparationTime = !isPreparationTime;
                     }
 
+                    // If it's the last round skip the rest time and stop the timer
                     if(roundIterator == roundNumber && isRestTime) {
+                        // Reset variables
                         isRestTime = false;
                         isActive = false;
                         isPreparationTime = true;
@@ -97,13 +118,16 @@ public class TimerHandler {
                         getPreferences();
                         stopTimer();
 
+                    // Start the timer with the new data
                     } else {
                         getPreferences();
                         isActive = false;
                         startTimer();
                     }
 
+                // Stop the timer because it reached the end
                 } else {
+                    // Reset variables
                     isRestTime = false;
                     isActive = false;
                     isPreparationTime = true;
@@ -151,7 +175,6 @@ public class TimerHandler {
 
         // Update timer View
         updateTime(milsToFinish);
-        dataCallback.dataView(minutes, seconds, roundIterator, roundNumber);
 
     }
 
@@ -192,7 +215,6 @@ public class TimerHandler {
         clock = createTimer();
         // Reset TextView's text
         updateTime(milsToFinish);
-        dataCallback.dataView(minutes, seconds, roundIterator, roundNumber);
     }
 
 }

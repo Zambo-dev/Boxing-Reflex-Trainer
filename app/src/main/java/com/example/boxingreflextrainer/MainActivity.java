@@ -14,7 +14,7 @@ public class MainActivity extends AppCompatActivity implements TimerCallbacks {
     private Button startButton;
     private Button pauseButton;
     private Button stopButton;
-    TextView timerView, roundView;
+    private TextView timerView, roundView;
     private TimerHandler timerHandler;
 
 
@@ -23,16 +23,16 @@ public class MainActivity extends AppCompatActivity implements TimerCallbacks {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // Get button object
+        // Initialize buttons and views
         startButton = findViewById(R.id.StartButton);
         pauseButton = findViewById(R.id.PauseButton);
         stopButton = findViewById(R.id.StopButton);
         timerView = findViewById(R.id.Timer);
         roundView = findViewById(R.id.RoundView);
 
-        // Pass timer view and time to TimerHandler class with constructor
+        // Initialize timerHandler with constructor
         timerHandler = new TimerHandler(0, 0, this);
-        // Get shared preference time
+        // Get shared preferences
         timerHandler.getPreferences();
 
         // Set click listener on start button
@@ -67,14 +67,13 @@ public class MainActivity extends AppCompatActivity implements TimerCallbacks {
         stopButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Change timer status
+                // Reset boolean variables
                 timerHandler.isActive = false;
-                // Call StopTimer function from TimerHandler class
-                timerHandler.stopTimer();
                 timerHandler.isRestTime = false;
                 timerHandler.isPreparationTime = true;
                 timerHandler.roundIterator = 0;
-                timerHandler.getPreferences();
+                // Call stopTimer
+                timerHandler.stopTimer();
             }
         });
 
@@ -84,7 +83,6 @@ public class MainActivity extends AppCompatActivity implements TimerCallbacks {
     @Override
     public void onResume() {
         super.onResume();
-
         // Get shared preference time
         timerHandler.getPreferences();
     }
@@ -113,12 +111,14 @@ public class MainActivity extends AppCompatActivity implements TimerCallbacks {
 
 
     @Override
+    // Update MainActivity Views
     public void dataView(long min, long sec, int iterator , int round) {
         timerView.setText(String.format("%d:%d", min, sec));
         roundView.setText(String.format("Round: %d/%d", iterator + 1, round));
     }
 
     @Override
+    // Reset MainActivity buttons
     public void resetButtons() {
         startButton.setText("Start");
         startButton.setVisibility(View.VISIBLE);
