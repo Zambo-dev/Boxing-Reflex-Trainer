@@ -12,6 +12,7 @@ public class SettingsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        // Change action bar title
         getSupportActionBar().setTitle("Settings");
 
         // Insert activity_settings.xml into SettingsActivity

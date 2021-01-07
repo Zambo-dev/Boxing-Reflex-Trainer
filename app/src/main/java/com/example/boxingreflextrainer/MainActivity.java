@@ -88,6 +88,7 @@ public class MainActivity extends AppCompatActivity implements TimerCallbacks {
     @Override
     public void onResume() {
         super.onResume();
+        // Restore action bar title
         getSupportActionBar().setTitle("Boxing Reflex Trainer");
         // Get shared preference time
         timerHandler.getPreferences();
@@ -131,6 +132,7 @@ public class MainActivity extends AppCompatActivity implements TimerCallbacks {
         stopButton.setVisibility(View.GONE);
     }
 
+    // Change background color to the given color
     public void changeBackgroundColor(int color) {
         main.setBackgroundColor(color);
     }
