@@ -1,35 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
+        <PreferenceCategory
+            android:title="Time settings">
+                <EditTextPreference
+                    android:title="Training time"
+                    android:key="trainingTime"
+                    android:defaultValue="2:00"
+                >
+                </EditTextPreference>
 
-        <EditTextPreference
-            android:title="Training time"
-            android:key="trainingTime"
-            android:defaultValue="2:00"
-        >
-        </EditTextPreference>
+                <EditTextPreference
+                    android:title="Rest time"
+                    android:key="restTime"
+                    android:defaultValue="0:10"
+                    >
+                </EditTextPreference>
 
+                <EditTextPreference
+                    android:title="Preparation time"
+                    android:key="preparationTime"
+                    android:defaultValue="0:10"
+                    >
+                </EditTextPreference>
 
-        <EditTextPreference
-            android:title="Rest time"
-            android:key="restTime"
-            android:defaultValue="0:10"
-            >
-        </EditTextPreference>
+        </PreferenceCategory>
 
-        <EditTextPreference
-            android:title="Preparation time"
-            android:key="preparationTime"
-            android:defaultValue="0:10"
-            >
-        </EditTextPreference>
-
-        <EditTextPreference
-            android:title="Rounds number"
-            android:key="roundsNumber"
-            android:defaultValue="2"
-            >
-        </EditTextPreference>
-
+        <PreferenceCategory
+            android:title="Round settings">
+                <EditTextPreference
+                    android:title="Rounds number"
+                    android:key="roundsNumber"
+                    android:defaultValue="2"
+                    >
+                </EditTextPreference>
+        </PreferenceCategory>
 
 </PreferenceScreen>
