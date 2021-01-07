@@ -12,6 +12,8 @@ public class SettingsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        getSupportActionBar().setTitle("Settings");
+
         // Insert activity_settings.xml into SettingsActivity
         setContentView(R.layout.activity_settings);
         PreferenceManager.setDefaultValues(this, R.xml.settings_preferences, false);

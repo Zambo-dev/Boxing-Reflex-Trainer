@@ -88,6 +88,7 @@ public class MainActivity extends AppCompatActivity implements TimerCallbacks {
     @Override
     public void onResume() {
         super.onResume();
+        getSupportActionBar().setTitle("Boxing Reflex Trainer");
         // Get shared preference time
         timerHandler.getPreferences();
     }
@@ -100,7 +101,6 @@ public class MainActivity extends AppCompatActivity implements TimerCallbacks {
         getMenuInflater().inflate(R.menu.settings_button, menu);
         // Set menu item from xml file
         MenuItem settingsButton = menu.findItem(R.id.settings_button);
-
         // Set click listener on action bar menu
         settingsButton.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
