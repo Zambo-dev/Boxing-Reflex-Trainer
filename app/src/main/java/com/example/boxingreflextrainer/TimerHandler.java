@@ -3,6 +3,7 @@ package com.example.boxingreflextrainer;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.media.MediaPlayer;
 import android.os.CountDownTimer;
 import androidx.preference.PreferenceManager;
 
@@ -17,6 +18,7 @@ public class TimerHandler {
     SharedPreferences sharedPreferences;
     // MainActivity context
     Context context;
+    MediaPlayer bellSound,beforeFinish, beforeStart;
 
     // Time variables
     long minutes, seconds;
@@ -51,6 +53,10 @@ public class TimerHandler {
         updateTime(milsToFinish);
         // Create timer
         clock = createTimer();
+
+        beforeStart = MediaPlayer.create(context, R.raw.beforestart);
+        bellSound = MediaPlayer.create(context, R.raw.thebell);
+        beforeFinish = MediaPlayer.create(context, R.raw.beforefinish);
 
     }
 
@@ -90,6 +96,17 @@ public class TimerHandler {
             public void onTick(long millisUntilFinished) {
                 milsToFinish = millisUntilFinished;
                 updateTime(milsToFinish);
+
+                // Check if the remaining time is about 10 seconds
+                if(milsToFinish >= 10000 && milsToFinish < 11000) {
+
+                    if (!isPreparationTime && !isRestTime) {
+                        // If is workout time
+                        beforeFinish.start();
+                    } else
+                        // If is preparation of rest time
+                        beforeStart.start();
+                }
             }
 
             // When timer reach to the end print on TextView
@@ -189,12 +206,16 @@ public class TimerHandler {
             clock.start();
             // Change timer status
             isActive = true;
+
             if(isPreparationTime)
                 dataCallback.changeBackgroundColor(Color.YELLOW);
             else if(isRestTime)
                 dataCallback.changeBackgroundColor(Color.RED);
-            else
+            else {
                 dataCallback.changeBackgroundColor(Color.GREEN);
+                // Play start sound
+                bellSound.start();
+            }
         }
     }
 
