@@ -18,6 +18,7 @@ public class MainActivity extends AppCompatActivity implements TimerCallbacks {
     private TextView timerView, roundView;
     private TimerHandler timerHandler;
     private View main;
+    private boolean isPaused = false;
 
 
     @Override
@@ -55,15 +56,22 @@ public class MainActivity extends AppCompatActivity implements TimerCallbacks {
         pauseButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Call PauseTimer function from TimerHandler class
-                timerHandler.pauseTimer();
-                //Change start button text from "Start" to "Paused"
-                startButton.setText("Paused");
-                // Hide pause and stop button and show start button
-                startButton.setVisibility(View.VISIBLE);
-                pauseButton.setVisibility(View.GONE);
-                stopButton.setVisibility(View.GONE);
-                changeBackgroundColor(Color.WHITE);
+                if(!isPaused) {
+                    // Call PauseTimer function from TimerHandler class
+                    timerHandler.pauseTimer();
+                    // Change pause button action
+                    pauseButton.setText("Start");
+                    changeBackgroundColor(Color.WHITE);
+                }
+                else {
+                    // Call PauseTimer function from TimerHandler class
+                    timerHandler.startTimer();
+                    // Hide start button and show pause and stop buttons
+                    startButton.setVisibility(View.GONE);
+                    pauseButton.setVisibility(View.VISIBLE);
+                    stopButton.setVisibility(View.VISIBLE);
+                }
+                isPaused = !isPaused;
             }
         });
 
@@ -126,7 +134,6 @@ public class MainActivity extends AppCompatActivity implements TimerCallbacks {
     @Override
     // Reset MainActivity buttons
     public void resetButtons() {
-        startButton.setText("Start");
         startButton.setVisibility(View.VISIBLE);
         pauseButton.setVisibility(View.GONE);
         stopButton.setVisibility(View.GONE);
