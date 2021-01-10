@@ -27,6 +27,32 @@
         </PreferenceCategory>
 
         <PreferenceCategory
+                android:title="Timer alerts">
+
+                <EditTextPreference
+                    android:title="Alert of end preparation"
+                    android:key="preparationAlert"
+                    android:defaultValue="0:10"
+                    >
+                </EditTextPreference>
+
+                <EditTextPreference
+                    android:title="Alert of end rest"
+                    android:key="restAlent"
+                    android:defaultValue="0:10"
+                    >
+                </EditTextPreference>
+
+                <EditTextPreference
+                    android:title="Alert of end round"
+                    android:key="roundAlert"
+                    android:defaultValue="0:10"
+                    >
+                </EditTextPreference>
+
+        </PreferenceCategory>
+
+        <PreferenceCategory
             android:title="Round settings">
                 <EditTextPreference
                     android:title="Rounds number"

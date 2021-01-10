@@ -32,6 +32,7 @@ public class TimerHandler {
     int roundIterator = 0;
     // Total rounds number
     int roundNumber = 0;
+    long preparationTimeEnd, restTimeEnd, roundTimeEnd;
     // Timer is running
     boolean isActive = false;
     // Is rest time: bewteen two rounds
@@ -97,14 +98,16 @@ public class TimerHandler {
                 milsToFinish = millisUntilFinished;
                 updateTime(milsToFinish);
 
-                // Check if the remaining time is about 10 seconds
-                if(milsToFinish >= 10000 && milsToFinish < 11000) {
+                if(isActive) {
 
-                    if (!isPreparationTime && !isRestTime) {
-                        // If is workout time
+                    // Check if round is ending
+                    if (milsToFinish >= roundTimeEnd && milsToFinish < roundTimeEnd + 1000 && !isPreparationTime && !isRestTime)
                         beforeFinish.start();
-                    } else
-                        // If is preparation of rest time
+
+                    else if (milsToFinish >= preparationTimeEnd && milsToFinish < preparationTimeEnd + 1000 && isPreparationTime && !isRestTime)
+                        beforeStart.start();
+
+                    else if (milsToFinish >= restTimeEnd && milsToFinish < restTimeEnd + 1000 && !isPreparationTime && isRestTime)
                         beforeStart.start();
                 }
             }
@@ -164,6 +167,7 @@ public class TimerHandler {
     // Get preferences form xml file
     public void getPreferences() {
         String temp;
+        String[] splitString;
         // Get shared preferences
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
 
@@ -171,7 +175,7 @@ public class TimerHandler {
             // Get timerTimer key's value from preferences
             temp = sharedPreferences.getString("trainingTime", "0:0");
             // Split minutes and seconds
-            String[] splitString = temp.split(":");
+            splitString = temp.split(":");
             // Convert minutes and seconds into long and set the timer
             setTotalTime(Long.parseLong(splitString[0]), Long.parseLong(splitString[1]));
         }
@@ -179,19 +183,37 @@ public class TimerHandler {
             // Get timerTimer key's value from preferences
             temp = sharedPreferences.getString("restTime", "0:0");
             // Split minutes and seconds
-            String[] splitString = temp.split(":");
+            splitString = temp.split(":");
             // Convert minutes and seconds into long and set the timer
             setTotalTime(Long.parseLong(splitString[0]), Long.parseLong(splitString[1]));
         } else {
             // Get timerTimer key's value from preferences
             temp = sharedPreferences.getString("preparationTime", "0:0");
             // Split minutes and seconds
-            String[] splitString = temp.split(":");
+            splitString = temp.split(":");
             // Convert minutes and seconds into long and set the timer
             setTotalTime(Long.parseLong(splitString[0]), Long.parseLong(splitString[1]));
         }
 
         roundNumber = Integer.parseInt(sharedPreferences.getString("roundsNumber", "-1"));
+
+        // Get timerTimer key's value from preferences
+        temp = sharedPreferences.getString("preparationAlert", "0:0");
+        // Split minutes and seconds
+        splitString = temp.split(":");
+        preparationTimeEnd = convertTime(Long.parseLong(splitString[0]), Long.parseLong(splitString[1]));
+
+        // Get timerTimer key's value from preferences
+        temp = sharedPreferences.getString("restAlent", "0:0");
+        // Split minutes and seconds
+        splitString = temp.split(":");
+        restTimeEnd = convertTime(Long.parseLong(splitString[0]), Long.parseLong(splitString[1]));
+
+        // Get timerTimer key's value from preferences
+        temp = sharedPreferences.getString("roundAlert", "0:0");
+        // Split minutes and seconds
+        splitString = temp.split(":");
+        roundTimeEnd = convertTime(Long.parseLong(splitString[0]), Long.parseLong(splitString[1]));
 
         // Update timer View
         updateTime(milsToFinish);

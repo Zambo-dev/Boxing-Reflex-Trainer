@@ -50,24 +50,26 @@
 
     <TextView
         android:id="@+id/Timer"
-        android:layout_width="290dp"
-        android:layout_height="86dp"
+        android:layout_width="363dp"
+        android:layout_height="156dp"
         android:ems="10"
         android:gravity="center"
-        android:textSize="80dp"
+        android:textSize="140sp"
+        android:textColor="#000000"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.495"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.207" />
+        app:layout_constraintVertical_bias="0.277" />
 
     <TextView
         android:id="@+id/RoundView"
         android:layout_width="290dp"
         android:layout_height="45dp"
-        android:textSize="40dp"
+        android:textSize="40sp"
         android:gravity="center"
+        android:textColor="#000000"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.495"
