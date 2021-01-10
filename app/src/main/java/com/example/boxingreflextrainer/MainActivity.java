@@ -10,7 +10,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
-import java.text.DateFormat;
+import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity implements TimerCallbacks {
     // Global class variables
@@ -21,7 +21,6 @@ public class MainActivity extends AppCompatActivity implements TimerCallbacks {
     private TimerHandler timerHandler;
     private View main;
     private boolean isPaused = false;
-    private DateFormat dateformat;
 
 
     @Override
@@ -100,7 +99,7 @@ public class MainActivity extends AppCompatActivity implements TimerCallbacks {
     public void onResume() {
         super.onResume();
         // Restore action bar title
-        getSupportActionBar().setTitle("Boxing Reflex Trainer");
+        Objects.requireNonNull(getSupportActionBar()).setTitle("Boxing Reflex Trainer");
         // Get shared preference time
         timerHandler.getPreferences();
     }
