@@ -10,6 +10,8 @@ import android.widget.Button;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.text.DateFormat;
+
 public class MainActivity extends AppCompatActivity implements TimerCallbacks {
     // Global class variables
     private Button startButton;
@@ -19,6 +21,7 @@ public class MainActivity extends AppCompatActivity implements TimerCallbacks {
     private TimerHandler timerHandler;
     private View main;
     private boolean isPaused = false;
+    private DateFormat dateformat;
 
 
     @Override
@@ -127,7 +130,7 @@ public class MainActivity extends AppCompatActivity implements TimerCallbacks {
     @Override
     // Update MainActivity Views
     public void dataView(long min, long sec, int iterator , int round) {
-        timerView.setText(String.format("%d:%d", min, sec));
+        timerView.setText(String.format("%2d:%2d", min, sec).replace(" ", "0"));
         roundView.setText(String.format("Round: %d/%d", iterator + 1, round));
     }
 
