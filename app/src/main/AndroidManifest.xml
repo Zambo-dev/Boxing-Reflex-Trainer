@@ -13,7 +13,7 @@
 
         <meta-data
             android:name="com.google.android.actions"
-            android:resource="@menu/settings_button" />
+            android:resource="@menu/action_bar" />
 
         <activity android:name=".MainActivity">
             <intent-filter>

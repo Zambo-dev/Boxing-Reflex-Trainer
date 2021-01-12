@@ -109,9 +109,13 @@ public class MainActivity extends AppCompatActivity implements TimerCallbacks {
     // Create settings menu in the action bar
     public boolean onCreateOptionsMenu(Menu menu) {
         // Connect action bar xml file
-        getMenuInflater().inflate(R.menu.settings_button, menu);
+        getMenuInflater().inflate(R.menu.action_bar, menu);
         // Set menu item from xml file
         MenuItem settingsButton = menu.findItem(R.id.settings_button);
+        MenuItem backButton = menu.findItem(R.id.back_button);
+
+        backButton.setVisible(false);
+
         // Set click listener on action bar menu
         settingsButton.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
