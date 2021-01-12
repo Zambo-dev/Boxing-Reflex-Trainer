@@ -114,6 +114,7 @@ public class MainActivity extends AppCompatActivity implements TimerCallbacks {
         MenuItem settingsButton = menu.findItem(R.id.settings_button);
         MenuItem backButton = menu.findItem(R.id.back_button);
 
+        // Hide backButton while in MainActivity
         backButton.setVisible(false);
 
         // Set click listener on action bar menu

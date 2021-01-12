@@ -36,6 +36,7 @@ public class SettingsActivity extends AppCompatActivity {
         MenuItem settingsButton = menu.findItem(R.id.settings_button);
         MenuItem backButton = menu.findItem(R.id.back_button);
 
+        // Hide settings button while in SettingsActivity
         settingsButton.setVisible(false);
 
         // Set click listener on action bar menu
