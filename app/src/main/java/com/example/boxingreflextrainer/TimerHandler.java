@@ -6,6 +6,13 @@ import android.graphics.Color;
 import android.media.MediaPlayer;
 import android.os.CountDownTimer;
 import androidx.preference.PreferenceManager;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 
 
 // This class manage the timer functions
@@ -171,6 +178,8 @@ public class TimerHandler {
         // Get shared preferences
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
 
+        updatePreferences(parseJson("profile_1"));
+
         if(!isRestTime && !isPreparationTime) {
             // Get timerTimer key's value from preferences
             temp = sharedPreferences.getString("trainingTime", "0:0");
@@ -220,6 +229,49 @@ public class TimerHandler {
 
     }
 
+    //Parse json data
+    protected JSONObject parseJson(String profileName) {
+        String jsonString = null;
+        JSONObject jsonObject = null;
+
+        try {
+            InputStream inputStream = context.getAssets().open("preferences.json");
+            int size = inputStream.available();
+            byte[] buffer = new byte[size];
+
+            inputStream.read(buffer);
+            inputStream.close();
+            jsonString = new String(buffer, StandardCharsets.UTF_8);
+
+            jsonObject = new JSONObject(jsonString);
+            return jsonObject.getJSONObject(profileName);
+
+        } catch (IOException ex) {
+            return null;
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    protected void updatePreferences(JSONObject profileJson) {
+        try {
+            SharedPreferences.Editor preferencesEditor = sharedPreferences.edit();
+
+            preferencesEditor.putString("trainingTime", profileJson.getString("training_time"));
+            preferencesEditor.putString("restTime", profileJson.getString("rest_time"));
+            preferencesEditor.putString("preparationTime", profileJson.getString("preparation_time"));
+            preferencesEditor.putString("roundsNumber", profileJson.getString("round_number"));
+            preferencesEditor.putString("preparationAlert", profileJson.getString("end_preparation"));
+            preferencesEditor.putString("restAlent", profileJson.getString("end_rest"));
+            preferencesEditor.putString("roundAlert", profileJson.getString("end_round"));
+
+            preferencesEditor.apply();
+        }
+        catch (JSONException e) {
+            System.out.println(e);
+        }
+    }
 
     // Function that start the timer when it's not active
     protected void startTimer() {

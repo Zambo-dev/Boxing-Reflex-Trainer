@@ -77,6 +77,7 @@ public class MainActivity extends AppCompatActivity implements TimerCallbacks {
             }
         });
 
+
         // Set click listener on pause button
         stopButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -138,6 +139,7 @@ public class MainActivity extends AppCompatActivity implements TimerCallbacks {
         roundView.setText(String.format("Round: %d/%d", iterator + 1, round));
     }
 
+
     @Override
     // Reset MainActivity buttons
     public void resetButtons() {
@@ -145,6 +147,7 @@ public class MainActivity extends AppCompatActivity implements TimerCallbacks {
         pauseButton.setVisibility(View.GONE);
         stopButton.setVisibility(View.GONE);
     }
+
 
     // Change background color to the given color
     public void changeBackgroundColor(int color) {

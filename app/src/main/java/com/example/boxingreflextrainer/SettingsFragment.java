@@ -13,18 +13,6 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         // Set preference form xml file
         setPreferencesFromResource(R.xml.settings_preferences, rootKey);
 
-        /*
-        preferenceChangeListener = new SharedPreferences.OnSharedPreferenceChangeListener() {
-            @Override
-            public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-                if (key.equals("timerTime")) {
-                    String s = sharedPreferences.getString(key, "0");
-                    System.out.println("Questa è la stringa " + s);
-                }
-            }
-        };
-        */
-
     }
 
     @Override
