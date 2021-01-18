@@ -10,8 +10,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.nio.charset.StandardCharsets;
 
 
@@ -46,6 +45,8 @@ public class TimerHandler {
     boolean isRestTime = false;
     // Is preparation time: before start
     boolean isPreparationTime = true;
+    String filePath = null;
+    int profileNumber = 0;
 
     // Constructor
     TimerHandler(long minutes, long seconds, Context context) {
@@ -204,8 +205,6 @@ public class TimerHandler {
             setTotalTime(Long.parseLong(splitString[0]), Long.parseLong(splitString[1]));
         }
 
-        roundNumber = Integer.parseInt(sharedPreferences.getString("roundsNumber", "-1"));
-
         // Get timerTimer key's value from preferences
         temp = sharedPreferences.getString("preparationAlert", "0:0");
         // Split minutes and seconds
@@ -224,32 +223,71 @@ public class TimerHandler {
         splitString = temp.split(":");
         roundTimeEnd = convertTime(Long.parseLong(splitString[0]), Long.parseLong(splitString[1]));
 
+        roundNumber = Integer.parseInt(sharedPreferences.getString("roundsNumber", "-1"));
+
         // Update timer View
         updateTime(milsToFinish);
 
     }
 
-    //Parse json data
-    protected JSONObject parseJson(String profileName) {
-        String jsonString = null;
-        JSONObject jsonObject = null;
+    protected void insertDefaultData(String path) {
+        JSONObject profileData = new JSONObject();
+        JSONObject profileObject = new JSONObject();
+        FileWriter file;
 
         try {
-            InputStream inputStream = context.getAssets().open("preferences.json");
-            int size = inputStream.available();
-            byte[] buffer = new byte[size];
+            file = new FileWriter(path);
+            profileData.put("training_time", "01:00");
+            profileData.put("rest_time", "00:10");
+            profileData.put("preparation_time", "00:20");
+            profileData.put("end_preparation", "00:10");
+            profileData.put("end_rest", "00:05");
+            profileData.put("end_round", "00:10");
+            profileData.put("round_number", "2");
 
-            inputStream.read(buffer);
-            inputStream.close();
-            jsonString = new String(buffer, StandardCharsets.UTF_8);
+            profileObject.put("profile_1", profileData);
 
-            jsonObject = new JSONObject(jsonString);
-            return jsonObject.getJSONObject(profileName);
+            file.write(profileObject.toString(2));
+            file.flush();
 
-        } catch (IOException ex) {
-            return null;
-        } catch (JSONException e) {
+            profileNumber = profileObject.length();
+        }
+        catch (JSONException | IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    //Parse json data
+    protected JSONObject parseJson(String profileName) {
+        JSONObject jsonObject = null;
+        FileReader fileReader;
+        filePath = context.getApplicationContext().getFilesDir().getPath() + "/" + context.getString(R.string.profilesjson) + ".json";
+        System.out.println("PATH" + filePath);
+        File file = new File(filePath);
+
+        try {
+            if(!file.exists()) {
+                file.createNewFile();
+                insertDefaultData(filePath);
+            }
+
+            fileReader = new FileReader(filePath);
+            BufferedReader bufferedReader = new BufferedReader(fileReader);
+            StringBuilder stringBuilder = new StringBuilder();
+            String line = bufferedReader.readLine();
+
+            while (line != null){
+                stringBuilder.append(line).append("\n");
+                line = bufferedReader.readLine();
+            }
+            bufferedReader.close();
+
+            jsonObject = new JSONObject(stringBuilder.toString());
+
+            return jsonObject;
+
+        } catch (IOException | JSONException e) {
+                e.printStackTrace();
         }
         return null;
     }
@@ -269,8 +307,41 @@ public class TimerHandler {
             preferencesEditor.apply();
         }
         catch (JSONException e) {
-            System.out.println(e);
+            e.printStackTrace();
         }
+    }
+
+    public void updateJson() {
+        JSONObject profileData = new JSONObject();
+        JSONObject profileObject = new JSONObject();
+        FileWriter file;
+
+        try {
+            for(int i=0; i < profileNumber; i++) {
+                profileObject.put(String.format("profile_%d", i+1), parseJson(String.format("profile_%d", i+1)));
+            }
+
+            file = new FileWriter(filePath);
+
+            profileData.put("training_time", sharedPreferences.getString("trainingTime", "0:0"));
+            profileData.put("rest_time", sharedPreferences.getString("restTime", "0:0"));
+            profileData.put("preparation_time", sharedPreferences.getString("preparationTime", "0:0"));
+            profileData.put("end_preparation", sharedPreferences.getString("preparationAlert", "0:0"));
+            profileData.put("end_rest", sharedPreferences.getString("restAlent", "0:0"));
+            profileData.put("end_round", sharedPreferences.getString("roundAlert", "0:0"));
+            profileData.put("round_number", sharedPreferences.getString("roundsNumber", "0:0"));
+
+            profileObject.put(String.format("profile_%d", profileNumber+1), profileData);
+            profileNumber = profileObject.length();
+
+            file.write(profileObject.toString(2));
+            file.flush();
+
+        }
+        catch (JSONException | IOException e) {
+            e.printStackTrace();
+        }
+
     }
 
     // Function that start the timer when it's not active

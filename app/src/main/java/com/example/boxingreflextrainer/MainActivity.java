@@ -103,6 +103,7 @@ public class MainActivity extends AppCompatActivity implements TimerCallbacks {
         Objects.requireNonNull(getSupportActionBar()).setTitle("Boxing Reflex Trainer");
         // Get shared preference time
         timerHandler.getPreferences();
+        timerHandler.updateJson();
     }
 
 
