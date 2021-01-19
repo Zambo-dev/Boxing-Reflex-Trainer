@@ -24,6 +24,7 @@ public class MainActivity extends AppCompatActivity implements TimerCallbacks {
     private TimerHandler timerHandler;
     private FileHandler fileHandler;
     private View main;
+    private Spinner dropdown;
     private boolean isPaused = false;
 
 
@@ -39,15 +40,11 @@ public class MainActivity extends AppCompatActivity implements TimerCallbacks {
         timerView = findViewById(R.id.Timer);
         roundView = findViewById(R.id.RoundView);
         main = findViewById(R.id.Main);
-        Spinner dropdown = findViewById(R.id.profileSelector);
+        dropdown = findViewById(R.id.profileSelector);
 
-        String[] items = new String[]{"profile_1", "profile_2"};
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, items);
-        dropdown.setAdapter(adapter);
-
+        fileHandler = new FileHandler(this);
         // Initialize timerHandler with constructor
         timerHandler = new TimerHandler(0, 0, this);
-        fileHandler = new FileHandler(this);
         // Get shared preferences
         timerHandler.getPreferences();
 
@@ -148,6 +145,9 @@ public class MainActivity extends AppCompatActivity implements TimerCallbacks {
     public void dataView(long min, long sec, int iterator , int round) {
         timerView.setText(String.format("%2d:%2d", min, sec).replace(" ", "0"));
         roundView.setText(String.format("Round: %d/%d", iterator + 1, round));
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, fileHandler.profilesArray);
+        dropdown.setAdapter(adapter);
     }
 
 

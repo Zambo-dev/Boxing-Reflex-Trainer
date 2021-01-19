@@ -6,13 +6,16 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.*;
+import java.util.ArrayList;
 
 public class FileHandler {
     String filePath = null;
     int profileNumber = 0;
+    ArrayList<String> profilesArray = new ArrayList<String>();
 
     FileHandler(Context context) {
         filePath = context.getApplicationContext().getFilesDir().getPath() + "/" + context.getString(R.string.profilesjson) + ".json";
+        parseJson("profile_1");
     }
 
     protected void insertDefaultData(String path) {
@@ -35,6 +38,7 @@ public class FileHandler {
             file.write(profileObject.toString(2));
             file.flush();
 
+            profilesArray.add("profile_1");
             profileNumber = profileObject.length();
         }
         catch (JSONException | IOException e) {
@@ -53,22 +57,23 @@ public class FileHandler {
             if(!file.exists()) {
                 file.createNewFile();
                 insertDefaultData(filePath);
+            } else {
+
+                fileReader = new FileReader(filePath);
+                BufferedReader bufferedReader = new BufferedReader(fileReader);
+                StringBuilder stringBuilder = new StringBuilder();
+                String line = bufferedReader.readLine();
+
+                while (line != null) {
+                    stringBuilder.append(line).append("\n");
+                    line = bufferedReader.readLine();
+                }
+                bufferedReader.close();
+
+                jsonObject = new JSONObject(stringBuilder.toString());
+
+                return jsonObject;
             }
-
-            fileReader = new FileReader(filePath);
-            BufferedReader bufferedReader = new BufferedReader(fileReader);
-            StringBuilder stringBuilder = new StringBuilder();
-            String line = bufferedReader.readLine();
-
-            while (line != null){
-                stringBuilder.append(line).append("\n");
-                line = bufferedReader.readLine();
-            }
-            bufferedReader.close();
-
-            jsonObject = new JSONObject(stringBuilder.toString());
-
-            return jsonObject;
 
         } catch (IOException | JSONException e) {
             e.printStackTrace();
