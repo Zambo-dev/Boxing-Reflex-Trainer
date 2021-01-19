@@ -100,7 +100,7 @@ public class MainActivity extends AppCompatActivity implements TimerCallbacks {
         dropdown.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                fileHandler.parseJson(parent.getItemAtPosition(position).toString());
+                System.out.println("OKCHAMP:" + parent.getItemAtPosition(position).toString());
             }
 
             @Override

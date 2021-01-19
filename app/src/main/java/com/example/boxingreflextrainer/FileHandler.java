@@ -76,7 +76,6 @@ public class FileHandler {
                 jsonObject = new JSONObject(stringBuilder.toString());
 
                 profileNumber = jsonObject.length();
-                profilesArray.add(String.format("profile_%d", profileNumber));
 
                 JSONObject result = jsonObject.getJSONObject(String.format("profile_%d", profileNumber));
                 return result;
@@ -95,8 +94,11 @@ public class FileHandler {
         FileWriter file;
 
         try {
+            profilesArray.clear();
+
             for(int i=1; i <= profileNumber; i++) {
                 profileObject.put(String.format("profile_%d", i), parseJson(String.format("profile_%d", i)));
+                profilesArray.add(String.format("profile_%d", i));
             }
 
             file = new FileWriter(filePath);
