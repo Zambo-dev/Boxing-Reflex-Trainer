@@ -78,6 +78,13 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.068" />
 
+    <Spinner
+        android:id="@+id/profileSelector"
+        android:layout_width="276dp"
+        android:layout_height="51dp"
+        tools:layout_editor_absoluteX="67dp"
+        tools:layout_editor_absoluteY="535dp" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 

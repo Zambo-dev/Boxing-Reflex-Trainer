@@ -6,10 +6,13 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.Spinner;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.io.File;
 import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity implements TimerCallbacks {
@@ -19,6 +22,7 @@ public class MainActivity extends AppCompatActivity implements TimerCallbacks {
     private Button stopButton;
     private TextView timerView, roundView;
     private TimerHandler timerHandler;
+    private FileHandler fileHandler;
     private View main;
     private boolean isPaused = false;
 
@@ -35,9 +39,15 @@ public class MainActivity extends AppCompatActivity implements TimerCallbacks {
         timerView = findViewById(R.id.Timer);
         roundView = findViewById(R.id.RoundView);
         main = findViewById(R.id.Main);
+        Spinner dropdown = findViewById(R.id.profileSelector);
+
+        String[] items = new String[]{"profile_1", "profile_2"};
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, items);
+        dropdown.setAdapter(adapter);
 
         // Initialize timerHandler with constructor
         timerHandler = new TimerHandler(0, 0, this);
+        fileHandler = new FileHandler(this);
         // Get shared preferences
         timerHandler.getPreferences();
 
@@ -103,7 +113,7 @@ public class MainActivity extends AppCompatActivity implements TimerCallbacks {
         Objects.requireNonNull(getSupportActionBar()).setTitle("Boxing Reflex Trainer");
         // Get shared preference time
         timerHandler.getPreferences();
-        timerHandler.updateJson();
+        fileHandler.updateJson(timerHandler.sharedPreferences);
     }
 
 
