@@ -6,13 +6,9 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.Spinner;
-import android.widget.TextView;
+import android.widget.*;
 import androidx.appcompat.app.AppCompatActivity;
 
-import java.io.File;
 import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity implements TimerCallbacks {
@@ -42,7 +38,7 @@ public class MainActivity extends AppCompatActivity implements TimerCallbacks {
         main = findViewById(R.id.Main);
         dropdown = findViewById(R.id.profileSelector);
 
-        fileHandler = new FileHandler(this);
+        fileHandler = new FileHandler(this, null);
         // Initialize timerHandler with constructor
         timerHandler = new TimerHandler(0, 0, this);
         // Get shared preferences
@@ -98,6 +94,20 @@ public class MainActivity extends AppCompatActivity implements TimerCallbacks {
                 timerHandler.stopTimer();
                 changeBackgroundColor(Color.WHITE);
             }
+        });
+
+
+        dropdown.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                fileHandler.parseJson(parent.getItemAtPosition(position).toString());
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+
         });
 
     }

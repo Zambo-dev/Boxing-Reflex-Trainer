@@ -6,12 +6,8 @@ import android.graphics.Color;
 import android.media.MediaPlayer;
 import android.os.CountDownTimer;
 import androidx.preference.PreferenceManager;
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.io.*;
-import java.nio.charset.StandardCharsets;
 
 
 // This class manage the timer functions
@@ -63,7 +59,7 @@ public class TimerHandler {
         // Create timer
         clock = createTimer();
 
-        fileHandler = new FileHandler(context);
+        fileHandler = new FileHandler(context, activeProfile);
 
         beforeStart = MediaPlayer.create(context, R.raw.beforestart);
         bellSound = MediaPlayer.create(context, R.raw.thebell);
@@ -181,7 +177,6 @@ public class TimerHandler {
         // Get shared preferences
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
 
-        activeProfile = "profile_1";
         updatePreferences(fileHandler.parseJson(activeProfile));
 
         if(!isRestTime && !isPreparationTime) {

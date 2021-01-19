@@ -12,10 +12,12 @@ public class FileHandler {
     String filePath = null;
     int profileNumber = 0;
     ArrayList<String> profilesArray = new ArrayList<String>();
+    String selectedProfile = null;
 
-    FileHandler(Context context) {
+    FileHandler(Context context, String profile) {
         filePath = context.getApplicationContext().getFilesDir().getPath() + "/" + context.getString(R.string.profilesjson) + ".json";
-        parseJson("profile_1");
+        selectedProfile = profile;
+        parseJson(selectedProfile);
     }
 
     protected void insertDefaultData(String path) {
@@ -39,7 +41,7 @@ public class FileHandler {
             file.flush();
 
             profilesArray.add("profile_1");
-            profileNumber = profileObject.length();
+            profileNumber = 1;
         }
         catch (JSONException | IOException e) {
             e.printStackTrace();
@@ -52,6 +54,7 @@ public class FileHandler {
         FileReader fileReader;
         System.out.println("PATH" + filePath);
         File file = new File(filePath);
+        selectedProfile = profileName;
 
         try {
             if(!file.exists()) {
@@ -72,7 +75,11 @@ public class FileHandler {
 
                 jsonObject = new JSONObject(stringBuilder.toString());
 
-                return jsonObject;
+                profileNumber = jsonObject.length();
+                profilesArray.add(String.format("profile_%d", profileNumber));
+
+                JSONObject result = jsonObject.getJSONObject(String.format("profile_%d", profileNumber));
+                return result;
             }
 
         } catch (IOException | JSONException e) {
@@ -88,8 +95,8 @@ public class FileHandler {
         FileWriter file;
 
         try {
-            for(int i=0; i < profileNumber; i++) {
-                profileObject.put(String.format("profile_%d", i+1), parseJson(String.format("profile_%d", i+1)));
+            for(int i=1; i <= profileNumber; i++) {
+                profileObject.put(String.format("profile_%d", i), parseJson(String.format("profile_%d", i)));
             }
 
             file = new FileWriter(filePath);
