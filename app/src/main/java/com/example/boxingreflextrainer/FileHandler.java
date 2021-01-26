@@ -13,10 +13,12 @@ public class FileHandler {
     int profileNumber = 0;
     ArrayList<String> profilesArray = new ArrayList<String>();
     String selectedProfile = null;
+    String activeProfile = "profile_1";
 
     FileHandler(Context context, String profile) {
         filePath = context.getApplicationContext().getFilesDir().getPath() + "/" + context.getString(R.string.profilesjson) + ".json";
         selectedProfile = profile;
+        activeProfile = profile;
         parseJson(selectedProfile);
     }
 
@@ -42,6 +44,7 @@ public class FileHandler {
 
             profilesArray.add("profile_1");
             profileNumber = 1;
+            activeProfile = "profile_1";
         }
         catch (JSONException | IOException e) {
             e.printStackTrace();
@@ -54,7 +57,6 @@ public class FileHandler {
         FileReader fileReader;
         System.out.println("PATH" + filePath);
         File file = new File(filePath);
-        selectedProfile = profileName;
 
         try {
             if(!file.exists()) {
@@ -77,7 +79,7 @@ public class FileHandler {
 
                 profileNumber = jsonObject.length();
 
-                JSONObject result = jsonObject.getJSONObject(String.format("profile_%d", profileNumber));
+                JSONObject result = jsonObject.getJSONObject(profileName);
                 return result;
             }
 
@@ -92,13 +94,18 @@ public class FileHandler {
         JSONObject profileData = new JSONObject();
         JSONObject profileObject = new JSONObject();
         FileWriter file;
+        int updateProfileId = 1;
 
         try {
             profilesArray.clear();
 
             for(int i=1; i <= profileNumber; i++) {
-                profileObject.put(String.format("profile_%d", i), parseJson(String.format("profile_%d", i)));
-                profilesArray.add(String.format("profile_%d", i));
+                if (String.format("profile_%d", i).equals(activeProfile))
+                    updateProfileId = i;
+                else {
+                    profileObject.put(String.format("profile_%d", i), parseJson(String.format("profile_%d", i)));
+                    profilesArray.add(String.format("profile_%d", i));
+                }
             }
 
             file = new FileWriter(filePath);
@@ -111,8 +118,9 @@ public class FileHandler {
             profileData.put("end_round", sharedPreferences.getString("roundAlert", "0:0"));
             profileData.put("round_number", sharedPreferences.getString("roundsNumber", "0:0"));
 
-            profileObject.put(String.format("profile_%d", profileNumber+1), profileData);
+            profileObject.put(String.format("profile_%d", updateProfileId), profileData);
             profileNumber = profileObject.length();
+            profilesArray.add(String.format("profile_%d", updateProfileId));
 
             file.write(profileObject.toString(2));
             file.flush();

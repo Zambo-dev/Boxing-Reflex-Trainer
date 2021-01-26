@@ -100,7 +100,8 @@ public class MainActivity extends AppCompatActivity implements TimerCallbacks {
         dropdown.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                System.out.println("OKCHAMP:" + parent.getItemAtPosition(position).toString());
+                ArrayAdapter<String> adapter = new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_spinner_dropdown_item, fileHandler.profilesArray);
+                dropdown.setAdapter(adapter);
             }
 
             @Override
@@ -118,9 +119,11 @@ public class MainActivity extends AppCompatActivity implements TimerCallbacks {
         super.onResume();
         // Restore action bar title
         Objects.requireNonNull(getSupportActionBar()).setTitle("Boxing Reflex Trainer");
+        fileHandler.updateJson(timerHandler.sharedPreferences);
         // Get shared preference time
         timerHandler.getPreferences();
-        fileHandler.updateJson(timerHandler.sharedPreferences);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_spinner_dropdown_item, fileHandler.profilesArray);
+        dropdown.setAdapter(adapter);
     }
 
 
@@ -155,9 +158,6 @@ public class MainActivity extends AppCompatActivity implements TimerCallbacks {
     public void dataView(long min, long sec, int iterator , int round) {
         timerView.setText(String.format("%2d:%2d", min, sec).replace(" ", "0"));
         roundView.setText(String.format("Round: %d/%d", iterator + 1, round));
-
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, fileHandler.profilesArray);
-        dropdown.setAdapter(adapter);
     }
 
 
@@ -169,7 +169,7 @@ public class MainActivity extends AppCompatActivity implements TimerCallbacks {
         stopButton.setVisibility(View.GONE);
     }
 
-
+    @Override
     // Change background color to the given color
     public void changeBackgroundColor(int color) {
         main.setBackgroundColor(color);

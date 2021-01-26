@@ -41,7 +41,7 @@ public class TimerHandler {
     boolean isRestTime = false;
     // Is preparation time: before start
     boolean isPreparationTime = true;
-    String activeProfile = null;
+    String activeProfile = "profile_1";
     FileHandler fileHandler;
 
     // Constructor
