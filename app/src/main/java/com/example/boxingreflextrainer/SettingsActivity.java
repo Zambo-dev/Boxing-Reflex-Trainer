@@ -7,11 +7,12 @@ import android.os.Bundle;
 import androidx.preference.PreferenceManager;
 
 
-public class SettingsActivity extends AppCompatActivity {
-
+public class SettingsActivity extends AppCompatActivity
+{
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
 
         // Change action bar title
@@ -23,12 +24,12 @@ public class SettingsActivity extends AppCompatActivity {
 
         // Connect fragment to activity_settings.xml
         getSupportFragmentManager().beginTransaction().replace(R.id.SettingsContainer, new SettingsFragment()).commit();
-
     }
 
     @Override
     // Create settings menu in the action bar
-    public boolean onCreateOptionsMenu(Menu menu) {
+    public boolean onCreateOptionsMenu(Menu menu)
+    {
         // Connect action bar xml file
         getMenuInflater().inflate(R.menu.action_bar, menu);
 

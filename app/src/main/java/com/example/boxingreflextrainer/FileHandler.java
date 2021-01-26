@@ -8,26 +8,30 @@ import org.json.JSONObject;
 import java.io.*;
 import java.util.ArrayList;
 
-public class FileHandler {
+public class FileHandler
+{
     String filePath = null;
     int profileNumber = 0;
     ArrayList<String> profilesArray = new ArrayList<String>();
     String selectedProfile = null;
     String activeProfile = "profile_1";
 
-    FileHandler(Context context, String profile) {
+    FileHandler(Context context, String profile)
+    {
         filePath = context.getApplicationContext().getFilesDir().getPath() + "/" + context.getString(R.string.profilesjson) + ".json";
         selectedProfile = profile;
         activeProfile = profile;
         parseJson(selectedProfile);
     }
 
-    protected void insertDefaultData(String path) {
+    protected void insertDefaultData(String path)
+    {
         JSONObject profileData = new JSONObject();
         JSONObject profileObject = new JSONObject();
         FileWriter file;
 
-        try {
+        try
+        {
             file = new FileWriter(path);
             profileData.put("training_time", "01:00");
             profileData.put("rest_time", "00:10");
@@ -46,30 +50,35 @@ public class FileHandler {
             profileNumber = 1;
             activeProfile = "profile_1";
         }
-        catch (JSONException | IOException e) {
+        catch (JSONException | IOException e)
+        {
             e.printStackTrace();
         }
     }
 
     //Parse json data
-    protected JSONObject parseJson(String profileName) {
+    protected JSONObject parseJson(String profileName)
+    {
         JSONObject jsonObject = null;
         FileReader fileReader;
         System.out.println("PATH" + filePath);
         File file = new File(filePath);
 
-        try {
+        try
+        {
             if(!file.exists()) {
                 file.createNewFile();
                 insertDefaultData(filePath);
-            } else {
-
+            }
+            else
+            {
                 fileReader = new FileReader(filePath);
                 BufferedReader bufferedReader = new BufferedReader(fileReader);
                 StringBuilder stringBuilder = new StringBuilder();
                 String line = bufferedReader.readLine();
 
-                while (line != null) {
+                while (line != null)
+                {
                     stringBuilder.append(line).append("\n");
                     line = bufferedReader.readLine();
                 }
@@ -83,26 +92,33 @@ public class FileHandler {
                 return result;
             }
 
-        } catch (IOException | JSONException e) {
+        }
+        catch (IOException | JSONException e)
+        {
             e.printStackTrace();
         }
+
         return null;
     }
 
 
-    public void updateJson(SharedPreferences sharedPreferences) {
+    public void updateJson(SharedPreferences sharedPreferences)
+    {
         JSONObject profileData = new JSONObject();
         JSONObject profileObject = new JSONObject();
         FileWriter file;
         int updateProfileId = 1;
 
-        try {
+        try
+        {
             profilesArray.clear();
 
-            for(int i=1; i <= profileNumber; i++) {
+            for(int i=1; i <= profileNumber; i++)
+            {
                 if (String.format("profile_%d", i).equals(activeProfile))
                     updateProfileId = i;
-                else {
+                else
+                {
                     profileObject.put(String.format("profile_%d", i), parseJson(String.format("profile_%d", i)));
                     profilesArray.add(String.format("profile_%d", i));
                 }
@@ -126,10 +142,10 @@ public class FileHandler {
             file.flush();
 
         }
-        catch (JSONException | IOException e) {
+        catch (JSONException | IOException e)
+        {
             e.printStackTrace();
         }
-
     }
 
 }

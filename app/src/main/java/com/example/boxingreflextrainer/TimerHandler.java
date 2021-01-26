@@ -11,7 +11,9 @@ import org.json.JSONObject;
 
 
 // This class manage the timer functions
-public class TimerHandler {
+public class TimerHandler
+{
+
     // Create timer object
     CountDownTimer clock;
     // TimerCallback object
@@ -45,7 +47,8 @@ public class TimerHandler {
     FileHandler fileHandler;
 
     // Constructor
-    TimerHandler(long minutes, long seconds, Context context) {
+    TimerHandler(long minutes, long seconds, Context context)
+    {
         // Initialize Instance object
         dataCallback = (TimerCallbacks) context;
         // Initialize context
@@ -64,12 +67,12 @@ public class TimerHandler {
         beforeStart = MediaPlayer.create(context, R.raw.beforestart);
         bellSound = MediaPlayer.create(context, R.raw.thebell);
         beforeFinish = MediaPlayer.create(context, R.raw.beforefinish);
-
     }
 
 
     // Update timer View
-    public void updateTime(long milliseconds) {
+    public void updateTime(long milliseconds)
+    {
         // Calculate minutes and seconds from milliseconds
         minutes = milliseconds / timeConversionValue;
         seconds = (milliseconds % timeConversionValue) / 1000;
@@ -79,7 +82,8 @@ public class TimerHandler {
 
 
     // Set max time
-    public void setTotalTime(long minutes, long seconds) {
+    public void setTotalTime(long minutes, long seconds)
+    {
         this.totalTime = convertTime(minutes, seconds);
         // Refresh the timer
         stopTimer();
@@ -87,7 +91,8 @@ public class TimerHandler {
 
 
     // Convert time into milliseconds
-    public long convertTime(long minutes, long seconds) {
+    public long convertTime(long minutes, long seconds)
+    {
         long time = minutes * 60000;
         time += seconds * 1000;
         return time;
@@ -95,17 +100,19 @@ public class TimerHandler {
 
 
     // Function that create the timer
-    protected CountDownTimer createTimer() {
-        return new CountDownTimer(milsToFinish, 1000) {
-
+    protected CountDownTimer createTimer()
+    {
+        return new CountDownTimer(milsToFinish, 1000)
+        {
             @Override
             // Every tick update milliseconds remaining and TextView's text
-            public void onTick(long millisUntilFinished) {
+            public void onTick(long millisUntilFinished)
+            {
                 milsToFinish = millisUntilFinished;
                 updateTime(milsToFinish);
 
-                if(isActive) {
-
+                if(isActive)
+                {
                     // Check if round is ending
                     if (milsToFinish >= roundTimeEnd && milsToFinish < roundTimeEnd + 1000 && !isPreparationTime && !isRestTime)
                         beforeFinish.start();
@@ -119,10 +126,11 @@ public class TimerHandler {
             }
 
             // When timer reach to the end print on TextView
-            public void onFinish() {
+            public void onFinish()
+            {
                 // Ceck if iterator is in round's range
-                if(roundIterator < roundNumber) {
-
+                if(roundIterator < roundNumber)
+                {
                     // If is workout time increase the round iterator
                     if(!isRestTime && !isPreparationTime)
                         roundIterator++;
@@ -131,12 +139,12 @@ public class TimerHandler {
                     if(roundIterator > 0)
                         isRestTime = !isRestTime;
                     // If is the first round update preparation time
-                    else {
+                    else
                         isPreparationTime = !isPreparationTime;
-                    }
 
                     // If it's the last round skip the rest time and stop the timer
-                    if(roundIterator == roundNumber && isRestTime) {
+                    if(roundIterator == roundNumber && isRestTime)
+                    {
                         // Reset variables
                         isRestTime = false;
                         isActive = false;
@@ -147,14 +155,18 @@ public class TimerHandler {
                         dataCallback.changeBackgroundColor(Color.WHITE);
 
                     // Start the timer with the new data
-                    } else {
+                    }
+                    else
+                    {
                         getPreferences();
                         isActive = false;
                         startTimer();
                     }
 
                 // Stop the timer because it reached the end
-                } else {
+                }
+                else
+                {
                     // Reset variables
                     isRestTime = false;
                     isActive = false;
@@ -166,12 +178,12 @@ public class TimerHandler {
                 }
             }
         };
-
     }
 
 
     // Get preferences form xml file
-    public void getPreferences() {
+    public void getPreferences()
+    {
         String temp;
         String[] splitString;
         // Get shared preferences
@@ -179,7 +191,8 @@ public class TimerHandler {
 
         updatePreferences(fileHandler.parseJson(activeProfile));
 
-        if(!isRestTime && !isPreparationTime) {
+        if(!isRestTime && !isPreparationTime)
+        {
             // Get timerTimer key's value from preferences
             temp = sharedPreferences.getString("trainingTime", "0:0");
             // Split minutes and seconds
@@ -187,14 +200,17 @@ public class TimerHandler {
             // Convert minutes and seconds into long and set the timer
             setTotalTime(Long.parseLong(splitString[0]), Long.parseLong(splitString[1]));
         }
-        else if(isRestTime && !isPreparationTime) {
+        else if(isRestTime && !isPreparationTime)
+        {
             // Get timerTimer key's value from preferences
             temp = sharedPreferences.getString("restTime", "0:0");
             // Split minutes and seconds
             splitString = temp.split(":");
             // Convert minutes and seconds into long and set the timer
             setTotalTime(Long.parseLong(splitString[0]), Long.parseLong(splitString[1]));
-        } else {
+        }
+        else
+        {
             // Get timerTimer key's value from preferences
             temp = sharedPreferences.getString("preparationTime", "0:0");
             // Split minutes and seconds
@@ -225,12 +241,13 @@ public class TimerHandler {
 
         // Update timer View
         updateTime(milsToFinish);
-
     }
 
 
-    protected void updatePreferences(JSONObject profileJson) {
-        try {
+    protected void updatePreferences(JSONObject profileJson)
+    {
+        try
+        {
             SharedPreferences.Editor preferencesEditor = sharedPreferences.edit();
 
             preferencesEditor.putString("trainingTime", profileJson.getString("training_time"));
@@ -243,15 +260,18 @@ public class TimerHandler {
 
             preferencesEditor.apply();
         }
-        catch (JSONException e) {
+        catch (JSONException e)
+        {
             e.printStackTrace();
         }
     }
 
 
     // Function that start the timer when it's not active
-    protected void startTimer() {
-        if(!isActive) {
+    protected void startTimer()
+    {
+        if(!isActive)
+        {
             // Start the timer
             clock.start();
             // Change timer status
@@ -261,7 +281,8 @@ public class TimerHandler {
                 dataCallback.changeBackgroundColor(Color.YELLOW);
             else if(isRestTime)
                 dataCallback.changeBackgroundColor(Color.RED);
-            else {
+            else
+            {
                 dataCallback.changeBackgroundColor(Color.GREEN);
                 // Play start sound
                 bellSound.start();
@@ -271,8 +292,10 @@ public class TimerHandler {
 
 
     // Function that pause the timer
-    protected void pauseTimer() {
-        if(isActive) {
+    protected void pauseTimer()
+    {
+        if(isActive)
+        {
             // Delete the actual timer
             clock.cancel();
             // Crete a new timer with remaining milliseconds
@@ -284,7 +307,8 @@ public class TimerHandler {
 
 
     // Function that stop the timer
-    protected void stopTimer() {
+    protected void stopTimer()
+    {
         // Delete the actual timer
         clock.cancel();
         if(!isActive)

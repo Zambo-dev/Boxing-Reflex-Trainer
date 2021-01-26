@@ -11,7 +11,9 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.Objects;
 
-public class MainActivity extends AppCompatActivity implements TimerCallbacks {
+public class MainActivity extends AppCompatActivity implements TimerCallbacks
+{
+
     // Global class variables
     private Button startButton;
     private Button pauseButton;
@@ -25,7 +27,8 @@ public class MainActivity extends AppCompatActivity implements TimerCallbacks {
 
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -61,14 +64,16 @@ public class MainActivity extends AppCompatActivity implements TimerCallbacks {
         pauseButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!isPaused) {
+                if(!isPaused)
+                {
                     // Call PauseTimer function from TimerHandler class
                     timerHandler.pauseTimer();
                     // Change pause button action
                     pauseButton.setText("Start");
                     changeBackgroundColor(Color.WHITE);
                 }
-                else {
+                else
+                {
                     // Call PauseTimer function from TimerHandler class
                     timerHandler.startTimer();
                     // Hide start button and show pause and stop buttons
@@ -97,7 +102,8 @@ public class MainActivity extends AppCompatActivity implements TimerCallbacks {
         });
 
 
-        dropdown.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        dropdown.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
+        {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 ArrayAdapter<String> adapter = new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_spinner_dropdown_item, fileHandler.profilesArray);
@@ -115,7 +121,8 @@ public class MainActivity extends AppCompatActivity implements TimerCallbacks {
 
 
     @Override
-    public void onResume() {
+    public void onResume()
+    {
         super.onResume();
         // Restore action bar title
         Objects.requireNonNull(getSupportActionBar()).setTitle("Boxing Reflex Trainer");
@@ -129,7 +136,8 @@ public class MainActivity extends AppCompatActivity implements TimerCallbacks {
 
     @Override
     // Create settings menu in the action bar
-    public boolean onCreateOptionsMenu(Menu menu) {
+    public boolean onCreateOptionsMenu(Menu menu)
+    {
         // Connect action bar xml file
         getMenuInflater().inflate(R.menu.action_bar, menu);
         // Set menu item from xml file
@@ -155,7 +163,8 @@ public class MainActivity extends AppCompatActivity implements TimerCallbacks {
 
     @Override
     // Update MainActivity Views
-    public void dataView(long min, long sec, int iterator , int round) {
+    public void dataView(long min, long sec, int iterator , int round)
+    {
         timerView.setText(String.format("%2d:%2d", min, sec).replace(" ", "0"));
         roundView.setText(String.format("Round: %d/%d", iterator + 1, round));
     }
@@ -163,7 +172,8 @@ public class MainActivity extends AppCompatActivity implements TimerCallbacks {
 
     @Override
     // Reset MainActivity buttons
-    public void resetButtons() {
+    public void resetButtons()
+    {
         startButton.setVisibility(View.VISIBLE);
         pauseButton.setVisibility(View.GONE);
         stopButton.setVisibility(View.GONE);
@@ -174,6 +184,5 @@ public class MainActivity extends AppCompatActivity implements TimerCallbacks {
     public void changeBackgroundColor(int color) {
         main.setBackgroundColor(color);
     }
-
 
 }
