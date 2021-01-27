@@ -14,7 +14,7 @@ public class FileHandler
     int profileNumber = 0;
     ArrayList<String> profilesArray = new ArrayList<String>();
     String selectedProfile = null;
-    String activeProfile = "profile_1";
+    String activeProfile = null;
 
     FileHandler(Context context, String profile)
     {
@@ -46,6 +46,7 @@ public class FileHandler
             file.write(profileObject.toString(2));
             file.flush();
 
+            profilesArray.clear();
             profilesArray.add("profile_1");
             profileNumber = 1;
             activeProfile = "profile_1";

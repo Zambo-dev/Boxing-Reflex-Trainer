@@ -106,8 +106,8 @@ public class MainActivity extends AppCompatActivity implements TimerCallbacks
         {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                ArrayAdapter<String> adapter = new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_spinner_dropdown_item, fileHandler.profilesArray);
-                dropdown.setAdapter(adapter);
+                timerHandler.activeProfile = parent.getItemAtPosition(position).toString();
+                fileHandler.activeProfile = parent.getItemAtPosition(position).toString();
             }
 
             @Override
