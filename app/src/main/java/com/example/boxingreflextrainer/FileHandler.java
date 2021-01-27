@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.json.JSONStringer;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -14,15 +13,12 @@ public class FileHandler
     String filePath = null;
     int profileNumber = 0;
     ArrayList<String> profilesArray = new ArrayList<String>();
-    String selectedProfile = null;
-    String activeProfile = null;
+    String selectedProfile = "profile_1";
+    String activeProfile = "profile_1";
 
-    FileHandler(Context context, String profile)
+    FileHandler(Context context)
     {
         filePath = context.getApplicationContext().getFilesDir().getPath() + "/" + context.getString(R.string.profilesjson) + ".json";
-        selectedProfile = profile;
-        activeProfile = profile;
-        parseJson(selectedProfile);
     }
 
     protected void insertDefaultData(String path)
@@ -89,8 +85,8 @@ public class FileHandler
 
                 jsonObject = new JSONObject(stringBuilder.toString());
 
-                profileNumber = jsonObject.length();
-
+                profileNumber = jsonObject.length() - 1;
+                activeProfile = jsonObject.getString("activeProfile");
                 JSONObject result = jsonObject.getJSONObject(profileName);
                 return result;
             }
@@ -111,6 +107,8 @@ public class FileHandler
         JSONObject profileObject = new JSONObject();
         FileWriter file;
         int updateProfileId = 1;
+
+        parseJson(activeProfile);
 
         try
         {

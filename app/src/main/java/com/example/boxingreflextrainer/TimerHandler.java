@@ -62,7 +62,7 @@ public class TimerHandler
         // Create timer
         clock = createTimer();
 
-        fileHandler = new FileHandler(context, activeProfile);
+        fileHandler = new FileHandler(context);
 
         beforeStart = MediaPlayer.create(context, R.raw.beforestart);
         bellSound = MediaPlayer.create(context, R.raw.thebell);

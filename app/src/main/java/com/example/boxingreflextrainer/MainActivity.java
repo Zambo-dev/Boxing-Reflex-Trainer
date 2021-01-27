@@ -41,7 +41,7 @@ public class MainActivity extends AppCompatActivity implements TimerCallbacks
         main = findViewById(R.id.Main);
         dropdown = findViewById(R.id.profileSelector);
 
-        fileHandler = new FileHandler(this, null);
+        fileHandler = new FileHandler(this);
         // Initialize timerHandler with constructor
         timerHandler = new TimerHandler(0, 0, this);
         // Get shared preferences
