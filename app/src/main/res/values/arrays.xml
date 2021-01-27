@@ -9,9 +9,4 @@
         <item>reply</item>
         <item>reply_all</item>
     </string-array>
-
-    <string-array name="profile_list">
-        <item>profile_1</item>
-    </string-array>
-
 </resources>
