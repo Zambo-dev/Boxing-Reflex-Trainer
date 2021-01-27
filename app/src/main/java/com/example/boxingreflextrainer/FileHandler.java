@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.json.JSONStringer;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -41,6 +42,7 @@ public class FileHandler
             profileData.put("end_round", "00:10");
             profileData.put("round_number", "2");
 
+            profileObject.put("activeProfile", "profile_1");
             profileObject.put("profile_1", profileData);
 
             file.write(profileObject.toString(2));
@@ -113,6 +115,7 @@ public class FileHandler
         try
         {
             profilesArray.clear();
+            profileObject.put("activeProfile", activeProfile);
 
             for(int i=1; i <= profileNumber; i++)
             {
