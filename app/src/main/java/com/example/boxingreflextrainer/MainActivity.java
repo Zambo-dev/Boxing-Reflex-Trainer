@@ -15,16 +15,14 @@ public class MainActivity extends AppCompatActivity implements TimerCallbacks
 {
 
     // Global class variables
-    private Button startButton;
-    private Button pauseButton;
-    private Button stopButton;
+    private Button startButton, pauseButton, stopButton, addProfileButton;
     private TextView timerView, roundView;
     private TimerHandler timerHandler;
     private FileHandler fileHandler;
     private View main;
     private Spinner dropdown;
     private boolean isPaused = false;
-
+    private int profileArrayIndex = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -38,6 +36,7 @@ public class MainActivity extends AppCompatActivity implements TimerCallbacks
         stopButton = findViewById(R.id.StopButton);
         timerView = findViewById(R.id.Timer);
         roundView = findViewById(R.id.RoundView);
+        addProfileButton = findViewById(R.id.profileButton);
         main = findViewById(R.id.Main);
         dropdown = findViewById(R.id.profileSelector);
 
@@ -50,7 +49,8 @@ public class MainActivity extends AppCompatActivity implements TimerCallbacks
         // Set click listener on start button
         startButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v)
+            {
                 // Call StartTimer function from TimerHandler class
                 timerHandler.startTimer();
                 // Hide start button and show pause and stop buttons
@@ -63,7 +63,8 @@ public class MainActivity extends AppCompatActivity implements TimerCallbacks
         // Set click listener on pause button
         pauseButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v)
+            {
                 if(!isPaused)
                 {
                     // Call PauseTimer function from TimerHandler class
@@ -89,7 +90,8 @@ public class MainActivity extends AppCompatActivity implements TimerCallbacks
         // Set click listener on pause button
         stopButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v)
+            {
                 // Reset boolean variables
                 timerHandler.isActive = false;
                 timerHandler.isRestTime = false;
@@ -106,8 +108,10 @@ public class MainActivity extends AppCompatActivity implements TimerCallbacks
         {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                timerHandler.activeProfile = parent.getItemAtPosition(position).toString();
-                fileHandler.activeProfile = parent.getItemAtPosition(position).toString();
+                profileArrayIndex = position;
+                timerHandler.activeProfile = parent.getItemAtPosition(profileArrayIndex).toString();
+                fileHandler.activeProfile = parent.getItemAtPosition(profileArrayIndex).toString();
+                timerHandler.getPreferences();
             }
 
             @Override
@@ -115,6 +119,20 @@ public class MainActivity extends AppCompatActivity implements TimerCallbacks
 
             }
 
+        });
+
+        addProfileButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v)
+            {
+                String profile = String.format("profile_%d",fileHandler.profileNumber);
+                ArrayAdapter<String> adapter = new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_spinner_dropdown_item, fileHandler.profilesArray);
+                dropdown.setAdapter(adapter);
+                fileHandler.insertDefaultData(fileHandler.filePath, profile);
+                fileHandler.activeProfile = profile;
+                timerHandler.activeProfile = fileHandler.activeProfile;
+                timerHandler.getPreferences();
+            }
         });
 
     }
